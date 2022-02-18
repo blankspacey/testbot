@@ -1,0 +1,26 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blankspacey/testbot.git"
+  },
+  "author": "blankspacey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blankspacey/testbot/issues"
+  },
+  "homepage": "https://github.com/blankspacey/testbot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0"
+  }
+}
