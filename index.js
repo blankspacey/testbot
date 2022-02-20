@@ -3,12 +3,6 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const prefix = 'eelon';
 
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.command.set(command.name, command);
-}
 dotenv.config();
 
 const client = new Discord.Client({
@@ -29,5 +23,22 @@ client.on('messageCreate', function(message) {
 		message.channel.send('');
 	}
 });
+
+function readCommands()	{
+	client.commands = new Discord.Collection();
+	const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const command = require(`./commands/${file}`);
+		client.command.set(command.name, command);
+	}
+}
+
+function registerEvents() {
+	const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('.js'));
+	for(const file of eventFiles) {
+		const event = require(`./events/${file}`);
+		client.on(event.name, data => event.execute(data, client));
+	}
+}
 
 client.login(process.env.TOKEN);
