@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const snoowrap = require('snoowrap');
+
 const prefix = 'eelon';
 
 dotenv.config();
@@ -8,6 +10,14 @@ dotenv.config();
 const client = new Discord.Client({
 	intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGES],
 	partials: ['CHANNEL']
+});
+
+const r = new snoowrap({
+	userAgent: process.env.REDDITUSERAGENT,
+	clientId: process.env.REDDITCLIENTID,
+	clientSecret: process.env.REDDITCLIENTSECRET,
+	username: process.env.REDDITUSERNAME,
+	password: process.env.REDDITPASSWORD
 });
 
 client.on('ready', function() {
@@ -18,10 +28,6 @@ client.on('messageCreate', function(message) {
 	if(!message.content.startsWith(prefix) || message.author.bot) return;
 	const arg = message.content.slice(prefix.length).split(/\s+/);
 	const command = arg.shift().toLowerCase();
-
-	if (command === 'eelon') {
-		message.channel.send('');
-	}
 });
 
 function readCommands()	{
