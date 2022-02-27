@@ -4,20 +4,32 @@ module.exports = {
 	maxArgs: 0,
 	execute: async function(message, args, client) {
 
-		const subreddit = client.snoowrap.getSubreddit('memesITA');
-		let submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+		try {
+			const subreddit = client.snoowrap.getSubreddit('memesITA');
 
-		while(submission.post_hint != 'image') submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+			if (client.submission == undefined) {
 
-		const messageEmbed = {
+				client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+				while (client.submission.post_hint != 'image' || client.submission.over_18) client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
 
-			color: 0x0099ff,
-			title: submission.title,
-			image: { url: submission.url }
+			}
 
-		};
+			const messageEmbed = {
 
-		message.reply({ embeds: [messageEmbed] });
+				color: 0x0099ff,
+				title: client.submission.title,
+				image: { url: client.submission.url }
+
+			};
+
+			message.reply({ embeds: [messageEmbed] });
+
+			client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+
+			while (client.submission.post_hint != 'image' || client.submission.over_18) client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+		} catch (error) {
+			console.error(error);
+		}
 
 	}
 };
