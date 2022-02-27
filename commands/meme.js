@@ -5,31 +5,33 @@ module.exports = {
 	execute: async function(message, args, client) {
 
 		try {
-			const subreddit = client.snoowrap.getSubreddit('memesITA');
 
-			if (client.submission == undefined) {
-
-				client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
-				while (client.submission.post_hint != 'image' || client.submission.over_18) client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
-
-			}
+			if (this.submission == undefined) this.submission = await getSubmission(client.snoowrap);
 
 			const messageEmbed = {
 
 				color: 0x0099ff,
-				title: client.submission.title,
-				image: { url: client.submission.url }
+				title: this.submission.title,
+				image: { url: this.submission.url }
 
 			};
 
 			message.reply({ embeds: [messageEmbed] });
 
-			client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+			this.submission = await getSubmission(client.snoowrap);
 
-			while (client.submission.post_hint != 'image' || client.submission.over_18) client.submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
 		} catch (error) {
 			console.error(error);
 		}
 
-	}
+	},
+	submission: undefined
 };
+
+async function getSubmission(snoowrap) {
+	const subreddit = snoowrap.getSubreddit('memesITA');
+	let submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+
+	while (submission.post_hint != 'image' || submission.over_18) submission = await subreddit.getRandomSubmission({ time: 'week' }).fetch();
+	return submission;
+}
